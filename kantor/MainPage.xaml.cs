@@ -37,7 +37,7 @@ namespace kantor
          nazwa funkcji: OnCounterClicked
          parametry wejściowe: sender, EventArgs
          wartośc zwracana: brak
-         informacje: Pobiera wartosci walut z api, datę, pobiera tą wartość i zapisuje w stringu, parsuje tekst przez wartości JSONa do specyficznego dla niego parametru
+         informacje: Pobiera wartosci walut z api, datę, pobiera tą wartość i zapisuje w stringu, parsuje tekst przez wartości JSONa do specyficznego dla niego parametru.
          autor: Jakub
         */
         private void OnCounterClicked(object sender, EventArgs e)
