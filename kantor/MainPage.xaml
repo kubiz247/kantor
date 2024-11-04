@@ -4,36 +4,30 @@
              x:Class="kantor.MainPage">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25">
+        <VerticalStackLayout Padding="30,0" Spacing="25">
             <Button
                 x:Name="CounterBtn"
-                Text="Button" 
-                SemanticProperties.Hint="Counts the number of times you click"
+                Text="Pobierz kurs"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
-            <Label x:Name="cLabel" Text=""/>
-            <HorizontalStackLayout>
-                <DatePicker x:Name="dpData" MinimumDate="2003-01-01">
-                    
-                </DatePicker>
-                <DatePicker x:Name="dpData2" MinimumDate="2003-01-01">
 
-                </DatePicker>
-            </HorizontalStackLayout>
+            <Entry x:Name="btcEntry" Placeholder="Wprowadź ilość BTC" Keyboard="Numeric" />
 
-            <HorizontalStackLayout>
-                <Image WidthRequest="100" HeightRequest="100" Source="dolar.jpg">
-                    
-                </Image>
-                <Image WidthRequest="100" HeightRequest="100" Source="funt.jpg">
+            <Button
+                x:Name="CalculateBtn"
+                Text="Przelicz na inne waluty"
+                Clicked="OnCalculateClicked"
+                HorizontalOptions="Fill" />
 
-                </Image>
-                <Image WidthRequest="100" HeightRequest="100" Source="euro.jpg">
+            <Label x:Name="plnLabel" Text="PLN: " />
+            <Label x:Name="usdLabel" Text="USD: " />
+            <Label x:Name="gbpLabel" Text="GBP: " />
+            <Label x:Name="eurLabel" Text="EUR: " />
 
-                </Image>
-            </HorizontalStackLayout>
+            <Label x:Name="plnResultLabel" Text="Przeliczenie na PLN: " />
+            <Label x:Name="usdResultLabel" Text="Przeliczenie na USD: " />
+            <Label x:Name="gbpResultLabel" Text="Przeliczenie na GBP: " />
+            <Label x:Name="eurResultLabel" Text="Przeliczenie na EUR: " />
         </VerticalStackLayout>
     </ScrollView>
 

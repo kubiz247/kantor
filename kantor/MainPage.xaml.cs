@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Runtime.Intrinsics.Arm;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -7,69 +6,52 @@ namespace kantor
 {
     public partial class MainPage : ContentPage
     {
-
-        public class Currency
-        {
-
-            public string? table { get; set; }
-            public string? currency { get; set; }
-            public string? code { get; set; }
-            public IList<Rate> rates { get; set; }
-
-
-        }
-
-
-        public class Rate
-        {
-            public string? no { get; set; }
-            public string? effectiveDate { get; set; }
-            public double? bid { get; set; }
-            public double? ask { get; set; }
-        }
-
+        private const string ApiUrl = "https://api.coindesk.com/v1/bpi/currentprice.json";
 
         public MainPage()
         {
             InitializeComponent();
         }
-        /*
-         nazwa funkcji: OnCounterClicked
-         parametry wejściowe: sender, EventArgs
-         wartośc zwracana: brak
-         informacje: Pobiera wartosci walut z api, datę, pobiera tą wartość i zapisuje w stringu, parsuje tekst przez wartości JSONa do specyficznego dla niego parametru.
-         autor: Jakub
-        */
+
         private void OnCounterClicked(object sender, EventArgs e)
         {
-            string date = dpData.Date.ToString("yyyy-MM-dd");
-
-            string usd = "https://api.nbp.pl/api/exchangerates/rates/c/usd/" + date + "/?format=json";
-            string gbp = "https://api.nbp.pl/api/exchangerates/rates/c/gbp/" + date + "/?format=json";
-            string eur = "https://api.nbp.pl/api/exchangerates/rates/c/eur/" + date + "/?format=json";
-            string usdj;
-            string gbpj;
-            string eurj;
-
-
-
             using (var webClient = new WebClient())
             {
-                usdj = webClient.DownloadString(usd);
-                gbpj = webClient.DownloadString(gbp);
-                eurj = webClient.DownloadString(eur);
+                string json = webClient.DownloadString(ApiUrl);
+                var jsonDoc = JsonNode.Parse(json);
+
+                double usdRate = jsonDoc["bpi"]["USD"]["rate_float"].GetValue<double>();
+                double gbpRate = jsonDoc["bpi"]["GBP"]["rate_float"].GetValue<double>();
+                double eurRate = jsonDoc["bpi"]["EUR"]["rate_float"].GetValue<double>();
+
+                double usdToPlnRate = 4.00;
+                double plnRate = usdRate * usdToPlnRate;
+
+                usdLabel.Text = $"USD: {usdRate:F2}";
+                gbpLabel.Text = $"GBP: {gbpRate:F2}";
+                eurLabel.Text = $"EUR: {eurRate:F2}";
+                plnLabel.Text = $"PLN: {plnRate:F2}";
             }
+        }
 
-            Currency usdc = JsonSerializer.Deserialize<Currency>(usdj);
-            Currency gbpc = JsonSerializer.Deserialize<Currency>(gbpj);
-            Currency eurc = JsonSerializer.Deserialize<Currency>(eurj);
+        private void OnCalculateClicked(object sender, EventArgs e)
+        {
+            if (double.TryParse(btcEntry.Text, out double btcAmount) && btcAmount > 0)
+            {
+                double usdRate = double.Parse(usdLabel.Text.Split(':')[1]);
+                double gbpRate = double.Parse(gbpLabel.Text.Split(':')[1]);
+                double eurRate = double.Parse(eurLabel.Text.Split(':')[1]);
+                double plnRate = double.Parse(plnLabel.Text.Split(':')[1]);
 
-            
-
-
-
-
+                usdResultLabel.Text = $"USD: {btcAmount * usdRate:F2}";
+                gbpResultLabel.Text = $"GBP: {btcAmount * gbpRate:F2}";
+                eurResultLabel.Text = $"EUR: {btcAmount * eurRate:F2}";
+                plnResultLabel.Text = $"PLN: {btcAmount * plnRate:F2}";
+            }
+            else
+            {
+                DisplayAlert("Błąd", "Wprowadź prawidłową ilość bitcoinów.", "OK");
+            }
         }
     }
-
 }
